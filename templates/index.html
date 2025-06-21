@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>抽礼物小游戏 💖</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffe6e6;
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 {
+      color: #d63384;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ff3b2e;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 24px;
+      color: #495057;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎁 抽礼物小游戏 💖</h1>
+  <p>点击下方按钮抽取你的神秘礼物：</p>
+  <button onclick="drawGift()">点击抽奖</button>
+  <div id="result"></div>
+
+  <script>
+    async function drawGift() {
+      const response = await fetch('/draw');
+      const data = await response.json();
+      document.getElementById('result').innerText = '🎉 恭喜你抽到了：' + data.gift;
+    }
+  </script>
+</body>
+</html>
