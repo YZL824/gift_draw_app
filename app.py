@@ -16,4 +16,4 @@ def draw():
     return jsonify({"gift": gift})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080)  # 确保 host 是 0.0.0.0
