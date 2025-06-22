@@ -2,47 +2,201 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>抽礼物小游戏 💖</title>
+  <title>给最爱的惊喜 ❤️</title>
   <style>
+    /* 全局样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      background: #ffe6e6;
+      font-family: 'Microsoft YaHei', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 照片轮播屏 */
+    #photo-screen {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s ease;
+    }
+    .slideshow {
+      width: 100%;
+      height: 60vh;
+      position: relative;
+      overflow: hidden;
+    }
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+    }
+    .photo-message {
+      position: absolute;
+      bottom: 10vh;
+      left: 0;
+      right: 0;
       text-align: center;
-      padding-top: 100px;
+      color: white;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
     }
-    h1 {
-      color: #d63384;
+    .photo-message h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #ff6f61;
+
+    /* 抽奖屏 */
+    #gift-screen {
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 100%;
+      padding-top: 15vh;
+      transition: left 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    #gift-screen.show {
+      left: 0;
+    }
+    .gift-container {
+      background: rgba(255, 255, 255, 0.9);
+      width: 90%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 按钮样式 */
+    .action-btn {
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      background: linear-gradient(to right, #ff6b6b, #ff8e8e);
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 50px;
       cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+      margin-top: 20px;
+      transition: all 0.3s;
     }
-    button:hover {
-      background-color: #ff3b2e;
+    .action-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
     }
+
+    /* 抽奖结果 */
     #result {
       margin-top: 30px;
-      font-size: 24px;
-      color: #495057;
+      font-size: 1.5rem;
+      min-height: 2em;
+      color: #d63384;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>🎁 抽礼物小游戏 💖</h1>
-  <p>点击下方按钮抽取你的神秘礼物：</p>
-  <button onclick="drawGift()">点击抽奖</button>
-  <div id="result"></div>
+  <!-- 照片轮播屏 -->
+  <div id="photo-screen">
+    <div class="slideshow">
+      <!-- 9张照片轮播 -->
+      <div class="slide" style="background-image: url('/static/images/1.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/2.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/3.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/4.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/5.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/6.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/7.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/8.jpg');"></div>
+      <div class="slide" style="background-image: url('/static/images/9.jpg');"></div>
+    </div>
+    <div class="photo-message">
+      <h1>我们的甜蜜回忆 ❤️</h1>
+      <button class="action-btn" onclick="showGiftScreen()">开始抽奖</button>
+    </div>
+  </div>
+
+  <!-- 抽奖屏 -->
+  <div id="gift-screen">
+    <div class="gift-container">
+      <h1 style="color: #d63384;">🎁 专属礼物抽奖</h1>
+      <p style="margin: 20px 0;">点击按钮抽取你的惊喜礼物</p>
+      <button class="action-btn" onclick="drawGift()">立即抽奖</button>
+      <div id="result"></div>
+    </div>
+  </div>
 
   <script>
+    // ===== 照片轮播逻辑 =====
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    
+    // 显示指定幻灯片
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.style.opacity = i === index ? 1 : 0;
+      });
+    }
+    
+    // 自动轮播
+    function autoPlay() {
+      currentSlide = (currentSlide + 1) % totalSlides;
+      showSlide(currentSlide);
+    }
+    
+    // 初始化
+    showSlide(0);
+    let slideInterval = setInterval(autoPlay, 3000); // 3秒切换
+
+    // ===== 切换到抽奖屏 =====
+    function showGiftScreen() {
+      clearInterval(slideInterval); // 停止轮播
+      document.getElementById('photo-screen').style.transform = 'translateX(-100%)';
+      document.getElementById('gift-screen').classList.add('show');
+    }
+
+    // ===== 抽奖逻辑 =====
     async function drawGift() {
-      const response = await fetch('/draw');
-      const data = await response.json();
-      document.getElementById('result').innerText = '🎉 恭喜你抽到了：' + data.gift;
+      const btn = document.querySelector('#gift-screen .action-btn');
+      const resultDiv = document.getElementById('result');
+      
+      btn.disabled = true;
+      resultDiv.textContent = "抽奖中...";
+      
+      try {
+        const response = await fetch('/draw');
+        const data = await response.json();
+        
+        // 模拟抽奖动画
+        let count = 0;
+        const gifts = ["小米耳机*1", "自选化妆品*1", "自选服装*1","一万美金","度假旅行","私房照"];
+        const tempShow = setInterval(() => {
+          resultDiv.textContent = `抽中：${gifts[count % gifts.length]}...`;
+          count++;
+        }, 100);
+        
+        // 最终结果
+        setTimeout(() => {
+          clearInterval(tempShow);
+          resultDiv.innerHTML = `🎉 恭喜你抽到了：<span style="color:#ff4757;">${data.gift}</span>`;
+          btn.disabled = false;
+        }, 1500);
+        
+      } catch (error) {
+        resultDiv.textContent = "抽奖失败，请重试";
+        btn.disabled = false;
+      }
     }
   </script>
 </body>
