@@ -2,84 +2,148 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>给最爱的惊喜 ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>给唐恩凤的生日惊喜 ❤️</title>
   <style>
-    /* 全局样式 */
+    /* 全局重置 */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
+    
     body {
-      font-family: 'Microsoft YaHei', sans-serif;
+      font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
       height: 100vh;
       overflow: hidden;
       position: relative;
+      touch-action: manipulation;
+      color: #333;
     }
 
-    /* 照片轮播屏 */
-    #photo-screen {
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    /* 通用页面样式 */
+    .page {
       width: 100%;
       height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       transition: transform 0.8s ease;
+      overflow-y: auto;
     }
+
+    /* 第一幕：信件 */
+    #letter-screen {
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+      z-index: 3;
+    }
+    
+    .letter-container {
+      background: rgba(255, 255, 255, 0.9);
+      width: 90%;
+      max-width: 600px;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      line-height: 1.8;
+    }
+    
+    .letter-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .letter-header h1 {
+      color: #d63384;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    
+    .letter-content {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+    
+    .days-counter {
+      font-weight: bold;
+      color: #ff6b6b;
+      font-size: 1.3rem;
+    }
+
+    /* 第二幕：照片回忆 */
+    #memory-screen {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      z-index: 2;
+      transform: translateX(100%);
+    }
+    
     .slideshow {
       width: 100%;
       height: 60vh;
       position: relative;
       overflow: hidden;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
+    
     .slide {
       position: absolute;
       width: 100%;
       height: 100%;
       background-size: contain;
+      background-repeat: no-repeat;
       background-position: center;
+      background-color: white;
       opacity: 0;
       transition: opacity 1.5s ease;
     }
-    .photo-message {
-      position: absolute;
-      bottom: 10vh;
-      left: 0;
-      right: 0;
+    
+    .memory-message {
       text-align: center;
       color: white;
       text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      padding: 0 20px;
+      margin-top: 20px;
     }
-    .photo-message h1 {
-      font-size: 2.5rem;
+    
+    .memory-message h1 {
+      font-size: 2rem;
       margin-bottom: 20px;
     }
 
-    /* 抽奖屏 */
+    /* 第三幕：抽奖 */
     #gift-screen {
       background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 100%;
-      padding-top: 15vh;
-      transition: left 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      z-index: 1;
+      transform: translateX(100%);
     }
-    #gift-screen.show {
-      left: 0;
-    }
+    
     .gift-container {
       background: rgba(255, 255, 255, 0.9);
       width: 90%;
       max-width: 500px;
-      margin: 0 auto;
+      margin: 20px auto;
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    
+    .gift-container h1 {
+      color: #d63384;
+      margin-bottom: 20px;
     }
 
     /* 按钮样式 */
     .action-btn {
-      padding: 12px 30px;
+      padding: 15px 30px;
       font-size: 1.2rem;
       background: linear-gradient(to right, #ff6b6b, #ff8e8e);
       color: white;
@@ -89,25 +153,102 @@
       box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
       margin-top: 20px;
       transition: all 0.3s;
+      display: inline-block;
+      min-width: 200px;
     }
+    
     .action-btn:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
     }
+    
+    .action-btn:active {
+      transform: translateY(1px);
+    }
 
     /* 抽奖结果 */
     #result {
-      margin-top: 30px;
+      margin: 30px 0;
       font-size: 1.5rem;
       min-height: 2em;
       color: #d63384;
       font-weight: bold;
+      word-break: break-all;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+      .letter-container, .gift-container {
+        width: 95%;
+        padding: 20px;
+      }
+      
+      .slideshow {
+        height: 50vh;
+      }
+      
+      .letter-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .letter-content {
+        font-size: 1rem;
+      }
+      
+      .memory-message h1, .gift-container h1 {
+        font-size: 1.6rem;
+      }
+      
+      .action-btn {
+        padding: 12px 25px;
+        font-size: 1.1rem;
+        min-width: 180px;
+      }
+      
+      #result {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .letter-header h1 {
+        font-size: 1.5rem;
+      }
+      
+      .memory-message h1, .gift-container h1 {
+        font-size: 1.4rem;
+      }
+      
+      .action-btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+        min-width: 160px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- 照片轮播屏 -->
-  <div id="photo-screen">
+  <!-- 第一幕：信件 -->
+  <div id="letter-screen" class="page">
+    <div class="letter-container">
+      <div class="letter-header">
+        <h1>致我最爱的唐恩凤</h1>
+        <p>❤️ 生日快乐 ❤️</p>
+      </div>
+      <div class="letter-content">
+        <p>亲爱的唐恩凤：</p>
+        <p>欢迎来到我为你特别制作的生日网站！首先恭喜你又长大了一岁～</p>
+        <p>今年我决定做一些不一样的东西给你，把我们美好的回忆和特别的礼物都放在这里。</p>
+        <p>到今天为止，我们已经一起度过了 <span class="days-counter">1272天</span>，</p>
+        <p>这些日子里有很多欢笑、感动和难忘的瞬间...</p>
+        <p>下面让我们一起回顾这些甜蜜的回忆吧！</p>
+      </div>
+      <button class="action-btn" onclick="showMemoryScreen()">查看甜蜜回忆</button>
+    </div>
+  </div>
+
+  <!-- 第二幕：照片回忆 -->
+  <div id="memory-screen" class="page">
     <div class="slideshow">
       <!-- 9张照片轮播 -->
       <div class="slide" style="background-image: url('/static/images/1.jpg');"></div>
@@ -120,50 +261,60 @@
       <div class="slide" style="background-image: url('/static/images/8.jpg');"></div>
       <div class="slide" style="background-image: url('/static/images/9.jpg');"></div>
     </div>
-    <div class="photo-message">
+    <div class="memory-message">
       <h1>我们的甜蜜回忆 ❤️</h1>
-      <button class="action-btn" onclick="showGiftScreen()">开始抽奖</button>
+      <button class="action-btn" onclick="showGiftScreen()">抽取生日礼物</button>
     </div>
   </div>
 
-  <!-- 抽奖屏 -->
-  <div id="gift-screen">
+  <!-- 第三幕：抽奖 -->
+  <div id="gift-screen" class="page">
     <div class="gift-container">
-      <h1 style="color: #d63384;">🎁 专属礼物抽奖</h1>
-      <p style="margin: 20px 0;">点击按钮抽取你的惊喜礼物</p>
+      <h1>🎁 专属生日礼物抽奖</h1>
+      <p>点击按钮抽取你的特别生日礼物</p>
       <button class="action-btn" onclick="drawGift()">立即抽奖</button>
       <div id="result"></div>
     </div>
   </div>
 
   <script>
+    // 计算在一起天数（示例：从2020-01-01开始计算）
+    const startDate = new Date('2021-12-28');
+    const today = new Date();
+    const daysTogether = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+    document.querySelector('.days-counter').textContent = daysTogether + '天';
+
     // ===== 照片轮播逻辑 =====
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
     const totalSlides = slides.length;
+    let slideInterval;
     
-    // 显示指定幻灯片
     function showSlide(index) {
       slides.forEach((slide, i) => {
         slide.style.opacity = i === index ? 1 : 0;
       });
     }
     
-    // 自动轮播
-    function autoPlay() {
-      currentSlide = (currentSlide + 1) % totalSlides;
-      showSlide(currentSlide);
+    function startSlideshow() {
+      showSlide(0);
+      slideInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        showSlide(currentSlide);
+      }, 3000);
+    }
+
+    // ===== 页面切换逻辑 =====
+    function showMemoryScreen() {
+      document.getElementById('letter-screen').style.transform = 'translateX(-100%)';
+      document.getElementById('memory-screen').style.transform = 'translateX(0)';
+      startSlideshow();
     }
     
-    // 初始化
-    showSlide(0);
-    let slideInterval = setInterval(autoPlay, 3000); // 3秒切换
-
-    // ===== 切换到抽奖屏 =====
     function showGiftScreen() {
-      clearInterval(slideInterval); // 停止轮播
-      document.getElementById('photo-screen').style.transform = 'translateX(-100%)';
-      document.getElementById('gift-screen').classList.add('show');
+      document.getElementById('memory-screen').style.transform = 'translateX(-100%)';
+      document.getElementById('gift-screen').style.transform = 'translateX(0)';
+      clearInterval(slideInterval);
     }
 
     // ===== 抽奖逻辑 =====
@@ -198,6 +349,15 @@
         btn.disabled = false;
       }
     }
+
+    // 移动端优化
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('gesturestart', function(e) {
+      e.preventDefault();
+    });
   </script>
 </body>
 </html>
