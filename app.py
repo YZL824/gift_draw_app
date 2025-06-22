@@ -15,5 +15,10 @@ def draw():
     gift = random.choice(gifts)
     return jsonify({"gift": gift})
 
+# 新增通配路由（关键！捕获所有未定义的路径）
+@app.route("/<path:path>")
+def catch_all(path):
+    return render_template("index.html")
+
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)  # 确保 host 是 0.0.0.0
+    app.run(host='0.0.0.0', port=8080)  # 确保生产环境可访问
